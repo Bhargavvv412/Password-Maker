@@ -1,15 +1,19 @@
-public class genratePass{
-    public static void main(String []args){
-        import java.util.Scanner;
+import java.util.Scanner;
 
 public class GeneratePass {
+    private final Generator generator;
+
+    public GeneratePass() {
+        this.generator = new Generator();
+    }
+
     private void printMenu() {
         System.out.println();
         System.out.println("1 - Password Generator");
         System.out.println("2 - Password Strength Check");
         System.out.println("3 - Useful Information");
         System.out.println("4 - Quit");
-        System.out.print("Choice:");
+        System.out.print("Choice: ");
     }
 
     public class Alphabet {
@@ -33,14 +37,14 @@ public class GeneratePass {
         }
     }
 
-    public static class Generator {
-        private static boolean includeUpper = false;
-        private static boolean includeLower = false;
-        private static boolean incNumber = false;
-        private static boolean includeSpecial = false;
-        private static final Scanner sc = new Scanner(System.in);
+    public class Generator {
+        private boolean includeUpper = false;
+        private boolean includeLower = false;
+        private boolean incNumber = false;
+        private boolean includeSpecial = false;
+        private final Scanner sc = new Scanner(System.in);
 
-        public static void getInfo() {
+        public void getInfo() {
             System.out.println("Give answers in yes or no only!");
 
             System.out.print("Do you want to include uppercase letters? ");
@@ -48,7 +52,7 @@ public class GeneratePass {
             if (response.equalsIgnoreCase("yes")) {
                 includeUpper = true;
             } else if (!response.equalsIgnoreCase("no")) {
-                PasswordError(response);
+                passwordError(response);
             }
 
             System.out.print("Do you want to include lowercase letters? ");
@@ -56,7 +60,7 @@ public class GeneratePass {
             if (response.equalsIgnoreCase("yes")) {
                 includeLower = true;
             } else if (!response.equalsIgnoreCase("no")) {
-                PasswordError(response);
+                passwordError(response);
             }
 
             System.out.print("Do you want to include numbers? ");
@@ -64,7 +68,7 @@ public class GeneratePass {
             if (response.equalsIgnoreCase("yes")) {
                 incNumber = true;
             } else if (!response.equalsIgnoreCase("no")) {
-                PasswordError(response);
+                passwordError(response);
             }
 
             System.out.print("Do you want to include special characters? ");
@@ -72,21 +76,68 @@ public class GeneratePass {
             if (response.equalsIgnoreCase("yes")) {
                 includeSpecial = true;
             } else if (!response.equalsIgnoreCase("no")) {
-                PasswordError(response);
+                passwordError(response);
             }
         }
-    }
 
-    public static void main(String[] args) {
-        Generator.getInfo();
-    }
-
-    public static void PasswordError(String i) {
-        if (!i.equalsIgnoreCase("yes") && !i.equalsIgnoreCase("no")) {
-            System.out.println("You have entered something incorrect, let's go over it again.\n");
+        private void passwordError(String response) {
+            if (!response.equalsIgnoreCase("yes") && !response.equalsIgnoreCase("no")) {
+                System.out.println("You have entered something incorrect, let's go over it again.\n");
+            }
         }
-    }
-}
 
+        public void generateredPass() {
+            Alphabet alphabet = new Alphabet(includeUpper, includeLower, incNumber, includeSpecial);
+            String availableCharacters = alphabet.getAlphabet();
+        
+            if (availableCharacters.isEmpty()) {
+                System.out.println("You need to include at least one character type!");
+                return;
+            }
+        
+            int passwordLength = 12;
+            StringBuilder password = new StringBuilder();
+        
+            for (int i = 0; i < passwordLength; i++) {
+                int randomIndex = (int) (Math.random() * availableCharacters.length());
+                password.append(availableCharacters.charAt(randomIndex));
+            }
+        
+            System.out.println("Generated Password: " + password.toString());
+        }
+        
+
+    }
+
+    public void mainLoop() {
+        System.out.println("Welcome Password Services :)");
+        printMenu();
+
+        Scanner sc = new Scanner(System.in);
+        String userOption = "-1";
+
+        while (!userOption.equals("4")) {
+            userOption = sc.next();
+
+            switch (userOption) {
+                case "1" -> {
+                    generator.getInfo();
+                    printMenu();
+                }
+                case "2" -> {
+                    // checkPassword();
+                    printMenu();
+                }
+                case "3" -> {
+                    // printUsefulInfo();
+                    printMenu();
+                }
+                default -> {
+                    System.out.println();
+                    System.out.println("Kindly select one of the available commands");
+                    printMenu();
+                }
+            }
+        }
     }
 }
